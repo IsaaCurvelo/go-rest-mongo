@@ -4,6 +4,8 @@ RUN apk add bash
 
 WORKDIR /go/src/app
 
-# RUN go get
+# RUN go get "github.com/julienschmidt/httprouter"
+# RUN go get "gopkg.in/mgo.v2"
+# RUN go get "gopkg.in/mgo.v2/bson"
 
 CMD tail -f /dev/null
