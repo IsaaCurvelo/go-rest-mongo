@@ -1,14 +1,39 @@
 ###
-GET http://localhost:8080/consoles/61360ad4a3664e341865dc64 HTTP/1.1
+GET http://localhost:8080/consoles/61364da771fe8e079fc3e2af HTTP/1.1
 
 ###
-GET http://localhost:8080/oi HTTP/1.1
-
-###
-GET http://localhost:8080/consoles/61360ad4a3664e341865dc64 HTTP/1.1
-content-type: application/json
+POST http://localhost:8080/consoles HTTP/1.1
+Content-Type: application/json
 
 {
-    "name": "sample",
-    "time": "Wed, 21 Oct 2015 18:27:50 GMT"
+    "name": "Xbox Series X",
+    "manufacturer": "Microsoft",
+    "generation": 9,
+    "formfactor": "desktop console"
 }
+
+###
+POST http://localhost:8080/consoles HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Playstation 5",
+    "manufacturer": "Sony",
+    "generation": 9,
+    "formfactor": "desktop console"
+}
+
+
+###
+POST http://localhost:8080/consoles HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Nintendo switch",
+    "manufacturer": "Nintendo",
+    "formfactor": "hybrid"
+}
+
+###
+
+DELETE http://localhost:8080/consoles/61364da771fe8e079fc3e2af HTTP/1.1

@@ -20,17 +20,18 @@ func NewConsoleController(session *mgo.Session) *ConsoleController {
 	return &ConsoleController{session}
 }
 
-func (consoleController ConsoleController) GetConsole(rw http.ResponseWriter, rqst *http.Request, p httprouter.Params) {
+func (consoleController ConsoleController) GetConsole(resWriter http.ResponseWriter, req *http.Request, p httprouter.Params) {
 	id := p.ByName("id")
+
 	if !bson.IsObjectIdHex(id) {
-		rw.WriteHeader(http.StatusNotFound)
+		resWriter.WriteHeader(http.StatusNotFound)
 	}
 
 	objectId := bson.ObjectIdHex(id)
 	console := models.Console{}
 
 	if err := consoleController.session.DB("consoles").C("consoles").FindId(objectId).One(&console); err != nil {
-		rw.WriteHeader(http.StatusNotFound)
+		resWriter.WriteHeader(http.StatusNotFound)
 		return
 	}
 
@@ -39,15 +40,52 @@ func (consoleController ConsoleController) GetConsole(rw http.ResponseWriter, rq
 		fmt.Println(err)
 	}
 
-	rw.Header().Set("Content-Type", "application/json")
-	rw.WriteHeader(http.StatusOK)
-	fmt.Fprintf(rw, "%s\n", jsonConsole)
+	resWriter.Header().Set("Content-Type", "application/json")
+	resWriter.WriteHeader(http.StatusOK)
+	fmt.Fprintf(resWriter, "%s\n", jsonConsole)
 }
 
-func (consoleController ConsoleController) CreateConsole(rw http.ResponseWriter, rqst *http.Request, p httprouter.Params) {
+func (consoleController ConsoleController) CreateConsole(resWriter http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	newConsole := models.Console{}
 
+	err := json.NewDecoder(req.Body).Decode(&newConsole)
+
+	if err != nil {
+		fmt.Println(err)
+		resWriter.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(resWriter, "the informed json is invalid!\n")
+		return
+	}
+
+	newConsole.Id = bson.NewObjectId()
+
+	consoleController.session.DB("consoles").C("consoles").Insert(newConsole)
+
+	newConsoleJson, err := json.Marshal(newConsole)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	resWriter.Header().Set("Content-Type", "application/json")
+	resWriter.WriteHeader(http.StatusCreated)
+	fmt.Fprintf(resWriter, "%s\n", newConsoleJson)
 }
 
-func (consoleController ConsoleController) DeleteConsole(rw http.ResponseWriter, rqst *http.Request, p httprouter.Params) {
+func (consoleController ConsoleController) DeleteConsole(resWriter http.ResponseWriter, req *http.Request, p httprouter.Params) {
+	id := p.ByName("id")
 
+	if !bson.IsObjectIdHex(id) {
+		resWriter.WriteHeader(http.StatusNotFound)
+	}
+
+	objectId := bson.ObjectIdHex(id)
+
+	if err := consoleController.session.DB("consoles").C("consoles").RemoveId(objectId); err != nil {
+		resWriter.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	resWriter.WriteHeader(http.StatusOK)
+	fmt.Fprint(resWriter, "Deleted user ", objectId, "\n")
 }

@@ -17,12 +17,8 @@ func main() {
 	router.POST("/consoles", consoleController.CreateConsole)
 	router.DELETE("/consoles/:id", consoleController.DeleteConsole)
 
-	router.GET("/", func(rw http.ResponseWriter, rqst *http.Request, p httprouter.Params) {
-		fmt.Println("aaaaaa")
-	})
-
+	defer http.ListenAndServe(":8080", router)
 	fmt.Println("o servidor http subiu...")
-	http.ListenAndServe(":8080", router)
 }
 
 func getSession() *mgo.Session {
