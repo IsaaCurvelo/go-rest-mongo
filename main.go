@@ -13,6 +13,7 @@ func main() {
 	router := httprouter.New()
 	consoleController := controllers.NewConsoleController(getSession())
 
+	router.GET("/consoles", consoleController.GetAllConsoles)
 	router.GET("/consoles/:id", consoleController.GetConsole)
 	router.POST("/consoles", consoleController.CreateConsole)
 	router.DELETE("/consoles/:id", consoleController.DeleteConsole)

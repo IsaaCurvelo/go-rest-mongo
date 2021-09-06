@@ -1,5 +1,5 @@
 ###
-GET http://localhost:8080/consoles/61364da771fe8e079fc3e2af HTTP/1.1
+GET http://localhost:8080/consoles HTTP/1.1
 
 ###
 POST http://localhost:8080/consoles HTTP/1.1
@@ -33,6 +33,10 @@ Content-Type: application/json
     "manufacturer": "Nintendo",
     "formfactor": "hybrid"
 }
+
+###
+GET http://localhost:8080/consoles/61364e1271fe8e079fc3e2b1 HTTP/1.1
+
 
 ###
 

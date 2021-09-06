@@ -20,7 +20,22 @@ func NewConsoleController(session *mgo.Session) *ConsoleController {
 	return &ConsoleController{session}
 }
 
-func (consoleController ConsoleController) GetConsole(resWriter http.ResponseWriter, req *http.Request, p httprouter.Params) {
+func (consoleController ConsoleController) GetAllConsoles(resWriter http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	var allConsoles []models.Console
+
+	consoleController.session.DB("consoles").C("consoles").Find(nil).All(&allConsoles)
+
+	allConsolesJson, err := json.Marshal(allConsoles)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	resWriter.WriteHeader(http.StatusOK)
+	fmt.Fprintf(resWriter, "%s\n", allConsolesJson)
+}
+
+func (consoleController ConsoleController) GetConsole(resWriter http.ResponseWriter, _ *http.Request, p httprouter.Params) {
 	id := p.ByName("id")
 
 	if !bson.IsObjectIdHex(id) {
@@ -35,14 +50,14 @@ func (consoleController ConsoleController) GetConsole(resWriter http.ResponseWri
 		return
 	}
 
-	jsonConsole, err := json.Marshal(console)
+	consoleJson, err := json.Marshal(console)
 	if err != nil {
 		fmt.Println(err)
 	}
 
 	resWriter.Header().Set("Content-Type", "application/json")
 	resWriter.WriteHeader(http.StatusOK)
-	fmt.Fprintf(resWriter, "%s\n", jsonConsole)
+	fmt.Fprintf(resWriter, "%s\n", consoleJson)
 }
 
 func (consoleController ConsoleController) CreateConsole(resWriter http.ResponseWriter, req *http.Request, _ httprouter.Params) {
