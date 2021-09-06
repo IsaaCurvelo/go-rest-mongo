@@ -1,0 +1,14 @@
+###
+GET http://localhost:8080/consoles/61360ad4a3664e341865dc64 HTTP/1.1
+
+###
+GET http://localhost:8080/oi HTTP/1.1
+
+###
+GET http://localhost:8080/consoles/61360ad4a3664e341865dc64 HTTP/1.1
+content-type: application/json
+
+{
+    "name": "sample",
+    "time": "Wed, 21 Oct 2015 18:27:50 GMT"
+}
